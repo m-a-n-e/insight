@@ -40,7 +40,6 @@ export const importFromClipboard = async () => {
     }
     const parsedData = JSON.parse(text);
     if (Array.isArray(parsedData)) {
-      alert('Ideias importadas com sucesso! Atualize a página para ver as mudanças.');
       return parsedData;
     } else {
       alert('O conteúdo da área de transferência não é um formato de lista de ideias válido.');
