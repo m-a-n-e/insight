@@ -1,9 +1,26 @@
-// src/utils/clipboardHelpers.js
-
-export const exportToClipboard = (data) => {
+const requestClipboardPermission = async () => {
   try {
+    const permission = await navigator.permissions.query({ name: 'clipboard-read' });
+    if (permission.state === 'granted' || permission.state === 'prompt') {
+      return true;
+    } else {
+      alert('Permissão para acessar a área de transferência negada.');
+      return false;
+    }
+  } catch (error) {
+    console.error('Erro ao solicitar permissão para a área de transferência:', error);
+    alert('Não foi possível solicitar permissão para a área de transferência.');
+    return false;
+  }
+};
+
+export const exportToClipboard = async (data) => {
+  try {
+    const hasPermission = await requestClipboardPermission();
+    if (!hasPermission) return;
+
     const dataString = JSON.stringify(data, null, 2);
-    navigator.clipboard.writeText(dataString);
+    await navigator.clipboard.writeText(dataString);
     alert('Ideias copiadas para a área de transferência!');
   } catch (error) {
     console.error('Falha ao copiar para a área de transferência:', error);
@@ -13,6 +30,9 @@ export const exportToClipboard = (data) => {
 
 export const importFromClipboard = async () => {
   try {
+    const hasPermission = await requestClipboardPermission();
+    if (!hasPermission) return [];
+
     const text = await navigator.clipboard.readText();
     if (!text) {
       alert('A área de transferência está vazia.');

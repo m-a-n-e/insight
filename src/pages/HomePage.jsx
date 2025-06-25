@@ -1,30 +1,22 @@
-// src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import IdeaCard from '../components/IdeaCard';
 import { Link } from 'react-router-dom';
-// Precisamos importar a função 'createIdea' para usar na importação
 import { getIdeas, createIdea } from '../api/ideasApi';
 import { exportToClipboard, importFromClipboard } from '../utils/clipboardHelpers';
 
 function HomePage() {
-  // Estado para guardar a lista de ideias
   const [ideas, setIdeas] = useState([]);
-  // Estado para controlar o carregamento (feedback visual para o usuário)
   const [loading, setLoading] = useState(true);
 
-  // useEffect para buscar as ideias da API quando o componente é montado.
-  // O array vazio `[]` como segundo argumento faz com que ele rode apenas uma vez.
   useEffect(() => {
     const fetchIdeas = async () => {
       try {
         const data = await getIdeas();
-        // Ordenamos as ideias para mostrar as mais recentes primeiro
         setIdeas(data.sort((a, b) => b.id - a.id));
       } catch (error) {
         console.error("Erro ao buscar ideias:", error);
         alert('Não foi possível carregar as ideias.');
       } finally {
-        // O 'finally' garante que o loading termine, mesmo se houver um erro.
         setLoading(false);
       }
     };
@@ -32,19 +24,16 @@ function HomePage() {
     fetchIdeas();
   }, []);
 
-  // Função para exportar os dados atuais para o clipboard
   const handleExport = () => {
     exportToClipboard(ideas);
   };
 
-  // Função para importar ideias do clipboard e salvá-las no servidor
   const handleImport = async () => {
     const importedIdeas = await importFromClipboard();
 
     if (importedIdeas.length > 0) {
       setLoading(true);
       try {
-        // Usamos Promise.all para esperar que todas as novas ideias sejam criadas
         await Promise.all(
           importedIdeas.map(idea =>
             createIdea({
@@ -54,7 +43,6 @@ function HomePage() {
             })
           )
         );
-        // Após criar, buscamos a lista atualizada do servidor
         const updatedData = await getIdeas();
         setIdeas(updatedData.sort((a, b) => b.id - a.id));
         alert('Ideias importadas e salvas no servidor com sucesso!');
@@ -68,7 +56,6 @@ function HomePage() {
   };
 
 
-  // Exibe uma mensagem de carregamento enquanto os dados não chegam
   if (loading) {
     return <div className="p-10 text-center text-gray-500">Carregando ideias...</div>;
   }

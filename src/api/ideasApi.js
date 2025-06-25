@@ -1,5 +1,3 @@
-// src/api/ideasApi.js
-
 const API_URL = 'http://localhost:3001/ideas';
 
 export const getIdeas = async () => {

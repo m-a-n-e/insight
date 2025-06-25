@@ -1,4 +1,3 @@
-// src/pages/NewIdeaPage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import IdeaForm from '../components/IdeaForm';
@@ -8,16 +7,14 @@ import { validateIdea } from '../utils/validationHelpers';
 function NewIdeaPage() {
   const navigate = useNavigate();
 
-  // Função que será chamada pelo formulário ao salvar
   const handleSave = async (ideaData) => {
-    // Primeiro, valida os dados
     if (!validateIdea(ideaData)) {
-      return; // Para a execução se for inválido
+      return; 
     }
-    // Se for válido, chama a API para criar
+
     try {
       await createIdea(ideaData);
-      navigate('/'); // Navega de volta para a home
+      navigate('/');
     } catch (error) {
       console.error("Erro:", error);
       alert("Falha ao salvar a ideia.");

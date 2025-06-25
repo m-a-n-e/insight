@@ -1,4 +1,3 @@
-// src/components/TagButton.jsx
 import React from 'react';
 
 function TagButton({ text }) {
